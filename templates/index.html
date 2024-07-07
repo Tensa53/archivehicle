@@ -1,5 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>ArchiVehicle</h1>
+
+<div class="container">
+
+<div class="row row-cols-1 row-cols-md-4 g-4">
+
+  {% for vehicle in vehicles %}
+  <div class="col">
+    <div class="card h-100">
+      <img src="{{ vehicle['image'] }}" class="card-img-top" alt="vehicle image" style="padding: 5px">
+      <div class="card-body">
+        <h5 class="card-title">{{ vehicle['name'] }}</h5>
+        <p class="card-text">{{ vehicle['description'][:125]}}...</p>
+        <a href="/" class="btn btn-primary">More info</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+</div>
+
 {% endblock %}
