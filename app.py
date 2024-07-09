@@ -1,6 +1,9 @@
+import math
+
 from bson import ObjectId
 from flask import Flask, render_template, request, redirect
 from pymongo import MongoClient
+import re
 
 app = Flask(__name__)
 
@@ -12,13 +15,19 @@ db = client.archiVehicle
 
 # This is a collection
 vehicles_col = db.vehicle
+all_vehicles = list(vehicles_col.find())
 manufacturers_col = db.manufacturer
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    vehicles_twenty = vehicles_col.find(limit=20)
-    return render_template('index.html', vehicles=vehicles_twenty)
+    page = request.args.get('page', default=1, type=int)
+    per_page = 24
+    start = (page - 1) * per_page
+    end = start + per_page
+    total_pages = math.ceil(len(all_vehicles) / per_page)
+    vehicles = all_vehicles[start:end]
+    return render_template('index.html', vehicles=vehicles, total_pages=total_pages, page=page)
 
 
 @app.route("/show_single_vehicle", methods=['POST'])
@@ -36,4 +45,4 @@ def search_a_vehicle():
     return render_template('index.html', vehicles=vehicles_found)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
