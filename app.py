@@ -28,6 +28,12 @@ def show_single_vehicle():
     manufacturer = manufacturers_col.find_one({'_id': vehicle['manufacturer_id']})
     return render_template('vehicle.html', vehicle=vehicle, manufacturer=manufacturer)
 
+@app.route("/search_a_vehicle", methods=['POST'])
+def search_a_vehicle():
+    vehicle_name = request.form['vehicleSearch']
+    pat = re.compile(vehicle_name, re.IGNORECASE)
+    vehicles_found = vehicles_col.find({ "name": {'$regex': pat}})
+    return render_template('index.html', vehicles=vehicles_found)
 
 if __name__ == '__main__':
     app.run()

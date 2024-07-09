@@ -4,6 +4,17 @@
 
 <div class="container" style="padding: 5px">
 
+<h1>Welcome to ArchiVehicle</h1>
+
+<form method="POST" action="{{ url_for('search_a_vehicle') }}">
+    <label for="vehicleSearch" class="form-label">Search a vehicle</label>
+    <input type="text" class="form-control" id="vehicleSearch" name="vehicleSearch">
+    <br>
+    <input type="submit" class="btn btn-primary" value="Cerca">
+</form>
+
+<br>
+
 <div class="row row-cols-1 row-cols-md-4 g-4">
 
   {% for vehicle in vehicles %}
