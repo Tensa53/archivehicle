@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+{% if message_success %}
+<div style="padding-top: 5px;">
+<div class="alert alert-success" role="alert">
+  {{ message_success }}. Go back <a href="/">Home</a>
+</div>
+</div>
+{% endif %}
+
+<form method="POST" action="{{ url_for('insert_vehicle') }}">
+  <p>General Info: (<span style="color: red">*</span>: Mandatory)</p>
+  <hr>
+
+  <div class="mb-3">
+    <label for="nameInput" class="form-label">Name <span style="color: red">*</span> </label>
+    <input type="text" class="form-control" id="nameInput" name="nameInput" required>
+  </div>
+  <div class="mb-3">
+    <label for="modelInput" class="form-label">Model <span style="color: red">*</span> </label>
+    <input type="text" class="form-control" id="modelInput" name="modelInput" required>
+  </div>
+  <div class="mb-3">
+    <label for="chassisInput" class="form-label">Chassis <span style="color: red">*</span> </label>
+      <select id="chassisInput" name="chassisInput" class="form-select" required>
+        <option value="Convertible">Convertible</option>
+        <option value="SUV">SUV</option>
+        <option value="Pickup Truck">Pickup Truck</option>
+        <option value="Sedan">Sedan</option>
+        <option value="Van">Van</option>
+        <option value="Hatchback">Hatchback</option>
+      </select>
+  </div>
+  <div class="mb-3">
+    <label for="typeInput" class="form-label">Type <span style="color: red">*</span> </label>
+      <select id="typeInput" name="typeInput" class="form-select" required>
+        <option value="New">New</option>
+        <option value="Used">Used</option>
+      </select>
+  </div>
+  <div class="mb-3">
+    <label for="yearInput" class="form-label">Year <span style="color: red">*</span> </label>
+    <input type="number" class="form-control" id="yearInput" name="yearInput" min="1800" max="2024" required>
+  </div>
+  <div class="mb-3">
+    <label for="priceInput" class="form-label">Price ($) <span style="color: red">*</span> </label>
+    <input type="number" class="form-control" id="priceInput" name="priceInput" min="1" required>
+  </div>
+  <div class="mb-3">
+    <label for="manufacturerInput" class="form-label">Manufacturer <span style="color: red">*</span> </label>
+      <select id="manufacturerInput" name="manufacturerInput" class="form-select" required>
+        {% for manufacturer in manufacturers %}
+            <option value="{{ manufacturer['_id'] }}">{{ manufacturer['name'] }}</option>
+        {% endfor %}
+      </select>
+  </div>
+  <label for="descriptionInput" class="form-label">Description <span style="color: red">*</span> </label>
+  <div class="form-floating">
+    <textarea class="form-control" id="descriptionInput" name="descriptionInput" style="height: 100px"></textarea>
+  </div>
+
+  <br>
+
+  <div class="accordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                    aria-expanded="false" aria-controls="collapseOne">
+                Mechanical Details
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <div class="mb-3">
+                    <label for="engineInput" class="form-label">Engine</label>
+                    <input type="text" class="form-control" id="engineInput" name="engineInput">
+                </div>
+                <div class="mb-3">
+                    <label for="cylindersInput" class="form-label">Cylinders</label>
+                    <input type="number" class="form-control" id="cylindersInput" name="cylindersInput">
+                </div>
+                <div class="mb-3">
+                    <label for="fuelInput" class="form-label">Fuel</label>
+                    <input type="text" class="form-control" id="fuelInput" name="fuelInput">
+                </div>
+                <div class="mb-3">
+                    <label for="mileageInput" class="form-label">Mileage</label>
+                    <input type="number" class="form-control" id="mileageInput" name="mileageInput">
+                </div>
+                <div class="mb-3">
+                    <label for="transmissionInput" class="form-label">Transmission</label>
+                    <input type="text" class="form-control" id="transmissionInput" name="transmissionInput">
+                </div>
+                <div class="mb-3">
+                    <label for="mileageInput" class="form-label">Mileage</label>
+                    <input type="number" class="form-control" id="mileageInput" name="mileageInput">
+                </div>
+                <div class="mb-3">
+                    <label for="mileageInput" class="form-label">Transmission</label>
+                    <input type="text" class="form-control" id="transmissionInput" name="transmissionInput">
+                </div>
+                <div class="mb-3">
+                    <label for="manufacturerInput" class="form-label">Drivetrain</label>
+                         <select id="drivetrainInput" name="drivetrainInput" class="form-select">
+                            {% for drivetrain in drivetrains %}
+                            <option value="{{ drivetrain }}">{{ drivetrain }}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+            </div>
+        </div>
+        </div>
+  </div>
+
+  <br>
+
+  <div class="accordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                    aria-expanded="false" aria-controls="collapseTwo">
+                Body Details
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+            <div class="mb-3">
+                <label for="trimInput" class="form-label">Trim</label>
+                <input type="text" class="form-control" id="trimInput" name="trimInput">
+            </div>
+            <div class="mb-3">
+                <label for="doorsInput" class="form-label">Doors</label>
+                <input type="number" class="form-control" id="doorsInput" name="doorsInput" min="2">
+            </div>
+            <div class="mb-3">
+                <label for="excolorInput" class="form-label">Exterior Color</label>
+                <input type="text" class="form-control" id="excolorInput" name="excolorInput">
+            </div>
+            <div class="mb-3">
+                <label for="incolorInput" class="form-label">Interior Color</label>
+                <input type="text" class="form-control" id="incolorInput" name="incolorInput">
+            </div>
+            </div>
+        </div>
+        </div>
+  </div>
+
+  <br>
+
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>
+</div>
+
+{% endblock %}
