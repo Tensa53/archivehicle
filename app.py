@@ -135,12 +135,25 @@ def show_single_vehicle():
     manufacturer = manufacturers_col.find_one({'_id': vehicle['manufacturer_id']})
     return render_template('vehicle.html', vehicle=vehicle, manufacturer=manufacturer)
 
+
 @app.route("/search_a_vehicle", methods=['POST'])
 def search_a_vehicle():
     vehicle_name = request.form['vehicleSearch']
     pat = re.compile(vehicle_name, re.IGNORECASE)
-    vehicles_found = vehicles_col.find({ "name": {'$regex': pat}})
+    vehicles_found = list(vehicles_col.find({"name": {'$regex': pat}}))
     return render_template('index.html', vehicles=vehicles_found)
+
+
+@app.route("/search_a_vehicle_advanced", methods=['GET', 'POST'])
+def search_a_vehicle_advanced():
+    return render_template("search_vehicle.html")
+
+
+@app.route("/delete_vehicle", methods=['POST'])
+def delete_vehicle():
+    vehicle_id = request.form['vehicleId']
+    vehicles_col.delete_one({'_id': ObjectId(vehicle_id)})
+    return render_template('vehicle.html', message_success="Vehicle deleted successfully")
 
 if __name__ == '__main__':
     app.run(debug=True)
