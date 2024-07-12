@@ -40,13 +40,13 @@ def get_image_path_chassis(chassis):
             return "../static/img/vehicle_sample_pickup-truck.png"
         case "Sedan":
             return "../static/img/vehicle_sample_sedan.png"
-        case "Suv":
+        case "SUV":
             return "../static/img/vehicle_sample_suv.png"
         case "Van":
             return "../static/img/vehicle_sample_van.png"
 
 
-def get_mechanical_details_filled(form):
+def get_mechanical_details(form):
     engine = form['engineInput']
     cylinders = form['cylindersInput']
     fuel = form['fuelInput']
@@ -79,53 +79,57 @@ def get_body_details(form):
         return None
 
 
+def process_vehicle_form():
+    name = request.form['nameInput']
+    model = request.form['modelInput']
+    chassis = request.form['chassisInput']
+    image = get_image_path_chassis(chassis)
+    type = request.form['typeInput']
+    year = request.form['yearInput']
+    price = request.form['priceInput']
+    manufacturer = request.form['manufacturerInput']
+    description = request.form['descriptionInput']
+    new_vehicle = {}
+    mechanical_details = get_mechanical_details(request.form)
+    body_details = get_body_details(request.form)
+    if body_details is None and mechanical_details is None:
+        new_vehicle = {"name": name, "model": model, "chassis": chassis, "type": type, "year": year, "price": price,
+                       "image": image,
+                       "description": description,
+                       "manufacturer_id": ObjectId(manufacturer)}
+    elif body_details is not None and mechanical_details is None:
+        new_vehicle = {"name": name, "model": model, "chassis": chassis, "type": type, "year": year, "price": price,
+                       "image": image,
+                       "description": description,
+                       "manufacturer_id": ObjectId(manufacturer),
+                       "body_details": body_details}
+    elif body_details is None and mechanical_details is not None:
+        new_vehicle = {"name": name, "model": model, "chassis": chassis, "type": type, "year": year, "price": price,
+                       "image": image,
+                       "description": description,
+                       "manufacturer_id": ObjectId(manufacturer),
+                       "mechanical_details": mechanical_details}
+    else:
+        new_vehicle = {"name": name, "model": model, "chassis": chassis, "type": type, "year": year, "price": price,
+                       "image": image,
+                       "description": description,
+                       "manufacturer_id": ObjectId(manufacturer),
+                       "mechanical_details": mechanical_details,
+                       "body_details": body_details}
+    return new_vehicle
+
+
 @app.route('/insert_vehicle', methods=['GET', 'POST'])
 def insert_vehicle():
     if request.method == 'POST':
-        name = request.form['nameInput']
-        model = request.form['modelInput']
-        chassis = request.form['chassisInput']
-        image = get_image_path_chassis(chassis)
-        type = request.form['typeInput']
-        year = request.form['yearInput']
-        price = request.form['priceInput']
-        manufacturer = request.form['manufacturerInput']
-        description = request.form['descriptionInput']
-
-        new_vehicle = {}
-        mechanical_details = get_mechanical_details_filled(request.form)
-        body_details = get_body_details(request.form)
-
-        if body_details is None and mechanical_details is None:
-            new_vehicle = {"name": name, "model": model, "chassis": chassis, "type": type, "year": year, "price": price,
-                           "image": image,
-                           "description": description,
-                           "manufacturer_id": ObjectId(manufacturer)}
-        elif body_details is not None and mechanical_details is None:
-            new_vehicle = {"name": name, "model": model, "chassis": chassis, "type": type, "year": year, "price": price,
-                           "image": image,
-                           "description": description,
-                           "manufacturer_id": ObjectId(manufacturer),
-                           "body_details": body_details}
-        elif body_details is None and mechanical_details is not None:
-            new_vehicle = {"name": name, "model": model, "chassis": chassis, "type": type, "year": year, "price": price,
-                           "image": image,
-                           "description": description,
-                           "manufacturer_id": ObjectId(manufacturer),
-                           "mechanical_details": mechanical_details}
-        else:
-            new_vehicle = {"name": name, "model": model, "chassis": chassis, "type": type, "year": year, "price": price,
-                           "image": image,
-                           "description": description,
-                           "manufacturer_id": ObjectId(manufacturer),
-                           "mechanical_details": mechanical_details,
-                           "body_details": body_details}
+        new_vehicle = process_vehicle_form()
 
         vehicles_col.insert_one(new_vehicle)
         return render_template('insert_vehicle.html', message_success="Vehicle inserted successfully")
 
     return render_template('insert_vehicle.html', manufacturers=list(manufacturers_col.find()),
-                           drivetrains = vehicles_col.distinct("mechanical_details.drivetrain", {}))
+                           drivetrains=vehicles_col.distinct("mechanical_details.drivetrain", {}),
+                           all_chassis=vehicles_col.distinct("chassis", {}))
 
 
 @app.route("/show_single_vehicle", methods=['GET', 'POST'])
@@ -147,6 +151,24 @@ def search_a_vehicle():
 @app.route("/search_a_vehicle_advanced", methods=['GET', 'POST'])
 def search_a_vehicle_advanced():
     return render_template("search_vehicle.html")
+
+
+@app.route("/update_vehicle", methods=['POST'])
+def update_vehicle():
+    input = request.form['updateBtn']
+
+    if input == "Update Info":
+        vehicle_id = request.form['vehicleId']
+        vehicle = vehicles_col.find_one({'_id': ObjectId(vehicle_id)})
+        return render_template('update_vehicle.html', vehicle=vehicle,
+                               manufacturers=list(manufacturers_col.find()),
+                               drivetrains=vehicles_col.distinct("mechanical_details.drivetrain", {}),
+                               all_chassis=vehicles_col.distinct("chassis", {}))
+    elif input == "Save Update":
+        vehicle_id = request.form['vehicleId']
+        updated_vehicle = process_vehicle_form()
+        vehicles_col.update_one({"_id": ObjectId(vehicle_id)}, {"$set": updated_vehicle}, upsert=False)
+        return render_template('update_vehicle.html', message_success="Vehicle updated successfully")
 
 
 @app.route("/delete_vehicle", methods=['POST'])

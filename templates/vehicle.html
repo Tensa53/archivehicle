@@ -19,16 +19,13 @@
 
         <div class="card-body">
             <h3 class="card-title">{{ vehicle['name'] }}</h3>
-{#            <form method="POST">#}
-{#                <input type="submit" class="btn btn-primary" value="Update Info">#}
-{#                <input type="hidden" name="vehicleId" value="{{ vehicle['_id'] }}">#}
-{#            </form>#}
+            <form method="POST">
+                <input type="submit" id="updateBtn" name="updateBtn" class="btn btn-primary" formaction="{{ url_for("update_vehicle") }}" value="Update Info">
+                <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" value="Delete info">
+                <input type="hidden" name="vehicleId" value="{{ vehicle['_id'] }}">
+            </form>
 
             <br>
-
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Delete info
-            </button>
 
             <h4>General Info:</h4>
             <p class="card-text"> <b>Description: </b> {{ vehicle['description'] }} </p>

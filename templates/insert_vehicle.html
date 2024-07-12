@@ -27,12 +27,9 @@
   <div class="mb-3">
     <label for="chassisInput" class="form-label">Chassis <span style="color: red">*</span> </label>
       <select id="chassisInput" name="chassisInput" class="form-select" required>
-        <option value="Convertible">Convertible</option>
-        <option value="SUV">SUV</option>
-        <option value="Pickup Truck">Pickup Truck</option>
-        <option value="Sedan">Sedan</option>
-        <option value="Van">Van</option>
-        <option value="Hatchback">Hatchback</option>
+        {% for chassis in all_chassis %}
+            <option value="{{ chassis }}">{{ chassis }}</option>
+        {% endfor %}
       </select>
   </div>
   <div class="mb-3">
@@ -104,7 +101,7 @@
                     <input type="text" class="form-control" id="transmissionInput" name="transmissionInput">
                 </div>
                 <div class="mb-3">
-                    <label for="manufacturerInput" class="form-label">Drivetrain</label>
+                    <label for="drivetrainInput" class="form-label">Drivetrain</label>
                          <select id="drivetrainInput" name="drivetrainInput" class="form-select">
                             {% for drivetrain in drivetrains %}
                             <option value="{{ drivetrain }}">{{ drivetrain }}</option>
