@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container" style="padding: 5px">
+
+<table class="table table-bordered table-striped">
+  <thead class="table-light"><tr>
+    <th></th>
+    <th colspan="6" style="text-align: center">Chassis</th>
+    <th colspan="4" style="text-align: center">Cylinders</th>
+    <th colspan="5" style="text-align: center">Fuel</th>
+    <th colspan="4" style="text-align: center">Drivetrain</th>
+    <th colspan="3" style="text-align: center">Doors</th>
+  </tr></thead>
+<tbody>
+  <tr style="text-align: center">
+    <td><b>Manufacturer</b></td>
+    <td><b>Convertible</b></td>
+    <td><b>Hatchback</b></td>
+    <td><b>Pickup Truck</b></td>
+    <td><b>SUV</b></td>
+    <td><b>Sedan</b></td>
+    <td><b>SUV</b></td>
+    <td><b>3</b></td>
+    <td><b>4</b></td>
+    <td><b>6</b></td>
+    <td><b>8</b></td>
+    <td><b>Diesel</b></td>
+    <td><b>E85 Flex Fuel</b></td>
+    <td><b>Gasoline</b></td>
+    <td><b>Hybrid</b></td>
+    <td><b>PHEV Hybrid Fuel</b></td>
+    <td><b>All-wheel Drive</b></td>
+    <td><b>Four-wheel Drive</b></td>
+    <td><b>Front-wheel Drive</b></td>
+    <td><b>Rear-wheel Drive</b></td>
+    <td><b>2</b></td>
+    <td><b>3</b></td>
+    <td><b>4</b></td>
+  </tr>
+  {% for manufacturer in manufacturer_stats %}
+  <tr style="text-align: center">
+    <td><b>{{ manufacturer['name'] }}</b></td>
+    <td>{{ manufacturer['convertible_count'] }}</td>
+    <td>{{ manufacturer['hatchback_count'] }}</td>
+    <td>{{ manufacturer['pickup_count'] }}</td>
+    <td>{{ manufacturer['suv_count'] }}</td>
+    <td>{{ manufacturer['sedan_count'] }}</td>
+    <td>{{ manufacturer['van_count'] }}</td>
+    <td>{{ manufacturer['cylindersthree_count'] }}</td>
+    <td>{{ manufacturer['cylindersfour_count'] }}</td>
+    <td>{{ manufacturer['cylinderssix_count'] }}</td>
+    <td>{{ manufacturer['cylinderseight_count'] }}</td>
+    <td>{{ manufacturer['diesel_count'] }}</td>
+    <td>{{ manufacturer['flexfuel_count'] }}</td>
+    <td>{{ manufacturer['gasoline_count'] }}</td>
+    <td>{{ manufacturer['hybrid_count'] }}</td>
+    <td>{{ manufacturer['phev_count'] }}</td>
+    <td>{{ manufacturer['allwheel_count'] }}</td>
+    <td>{{ manufacturer['fourwheel_count'] }}</td>
+    <td>{{ manufacturer['frontwheel_count'] }}</td>
+    <td>{{ manufacturer['rearwheel_count'] }}</td>
+    <td>{{ manufacturer['twodoors_count'] }}</td>
+    <td>{{ manufacturer['threedoors_count'] }}</td>
+    <td>{{ manufacturer['fourdoors_count'] }}</td>
+  </tr>
+  {% endfor %}
+</tbody></table>
+</div>
+
+{% endblock %}

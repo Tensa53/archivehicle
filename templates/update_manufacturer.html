@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding: 5px">
+
+    {% if message_success %}
+    <div style="padding-top: 5px;">
+    <div class="alert alert-success" role="alert">
+      {{ message_success }}. Go back <a href="/">Home</a>
+    </div>
+    </div>
+    {% endif %}
+
+
+    {% if message_error %}
+    <div style="padding-top: 5px;">
+    <div class="alert alert-danger" role="alert">
+      {{ message_error }}. Go back <a href="/">Home</a>
+    </div>
+    </div>
+    {% endif %}
+
+{% if manufacturer %}
+    <form method="POST" action="{{ url_for('update_manufacturer') }}">
+      <div class="mb-3">
+        <label for="nameInput" class="form-label">Name <span style="color: red">*</span> </label>
+        <input type="text" class="form-control" id="nameInput" name="nameInput"
+               value="{{ manufacturer['name'] }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="countryInput" class="form-label">Country <span style="color: red">*</span> </label>
+        <input type="text" class="form-control" id="countryInput" name="countryInput"
+               value="{{ manufacturer['country'] }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="founderInput" class="form-label">Founder <span style="color: red">*</span> </label>
+        <input type="text" class="form-control" id="founderInput" name="founderInput"
+               value="{{ manufacturer['founder'] }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="yearInput" class="form-label">Foundation Year <span style="color: red">*</span> </label>
+        <input type="number" class="form-control" id="yearInput" name="yearInput"
+               value="{{ manufacturer['year'] }}" min="1800" max="2024" required>
+      </div>
+      <label for="descriptionInput" class="form-label">Description <span style="color: red">*</span> </label>
+      <div class="form-floating">
+        <textarea class="form-control" id="descriptionInput" name="descriptionInput" style="height: 100px">{{ manufacturer['description'] }}</textarea>
+      </div>
+
+        <br>
+
+      <input type="hidden" id="manufacturerId" name="manufacturerId" value="{{ manufacturer['_id'] }}">
+      <input type="submit" class="btn btn-primary" name="updateBtn" id="updateBtn" value="Save Update">
+    </form>
+
+{% endif %}
+
+    <br>
+
+</div>
+{% endblock %}

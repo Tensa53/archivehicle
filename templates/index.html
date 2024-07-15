@@ -7,11 +7,91 @@
 <h1>Welcome to ArchiVehicle</h1>
 
 <form method="POST">
-    <label for="vehicleSearch" class="form-label">Search a vehicle</label>
-    <input type="text" class="form-control" id="vehicleSearch" name="vehicleSearch">
+    <label for="vehicleSearch" class="form-label">Search a vehicle by its name or use filters:</label>
+    <input type="text" class="form-control" id="nameFilter" name="nameFilter">
     <br>
     <input type="submit" class="btn btn-primary" formaction="{{ url_for('search_a_vehicle') }}" value="Search">
-    <input type="submit" class="btn btn-primary" formaction="{{ url_for('search_a_vehicle_advanced') }}" value="Advanced Search">
+    <br>
+    <br>
+    <div class="accordion" id="accordionExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Filter Search By:
+          </button>
+        </h2>
+        {% if vehicles %}
+        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        {% else %}
+        <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+        {% endif %}
+          <div class="accordion-body">
+                <label for="yearFilter">Year:</label>
+                <select name="yearFilter" id="yearFilter" class="form-select">
+                        <option value="No Year Filter">No Year Filter</option>
+                    {% for y in year %}
+                        <option value="{{ y }}">{{ y }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <label for="chassisFilter">Chassis:</label>
+                <select name="chassisFilter" id="chassisFilter" class="form-select">
+                        <option value="No Chassis Filter">No Chassis Filter</option>
+                    {% for c in chassis %}
+                        <option value="{{ c }}">{{ c }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <label for="priceAboveFilter">Price (Above):</label>
+                <input id="priceAboveFilter" name="priceAboveFilter" class="form-control" type="number" min="1000" step="1000">
+                <br>
+                <label for="priceBelowFilter">Price (Below):</label>
+                <input id="priceBelowFilter" name="priceBelowFilter" class="form-control" type="number" min="1000" step="1000">
+                <br>
+                <label for="cylindersFilter">Cylinders:</label>
+                    <select name="cylindersFilter" id="cylindersFilter" class="form-select">
+                            <option value="No Cylinders Filter">No Cylinders Filter</option>
+                        {% for c in cylinders %}
+                            <option value="{{ c }}">{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label for="fuelFilter">Fuel:</label>
+                    <select name="fuelFilter" id="fuelFilter" class="form-select">
+                            <option value="No Fuel Filter">No Fuel Filter</option>
+                        {% for f in fuel %}
+                            <option value="{{ f }}">{{ f }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label for="drivetrainFilter">Drivetrain:</label>
+                    <select name="drivetrainFilter" id="drivetrainFilter" class="form-select">
+                            <option value="No Drivetrain Filter">No Drivetrain Filter</option>
+                        {% for d in drivetrain %}
+                            <option value="{{ d }}">{{ d }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label for="doorsFilter">Doors:</label>
+                    <select name="doorsFilter" id="doorsFilter" class="form-select">
+                            <option value="No Doors Filter">No Doors Filter</option>
+                        {% for d in doors %}
+                            <option value="{{ d }}">{{ d }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label for="manufacturerFilter">Manufacturer:</label>
+                    <select name="manufacturerFilter" id="manufacturerFilter" class="form-select">
+                            <option value="No Manufacturer Filter">No Manufacturer Filter</option>
+                        {% for m in manufacturers %}
+                            <option value="{{ m }}">{{ m }}</option>
+                        {% endfor %}
+                    </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 </form>
 
 <br>
@@ -38,36 +118,10 @@
       </div>
       {% endfor %}
   {% else %}
-    <p>There are no vehicles to display</p>
+    <p>{{ empty_message }}</p>
   {% endif %}
 
 </div>
-
-{% if page %}
-<nav aria-label="Page navigation example" style="margin-top: 25px">
-  <ul class="pagination justify-content-center">
-    {% if page > 1 %}
-    <li class="page-item">
-      <a class="page-link" href="{{ url_for('index', page=page-1) }}">Prev</a>
-    </li>
-    {% else %}
-    <li class="page-item disabled">
-      <a class="page-link">Prev</a>
-    </li>
-    {% endif %}
-    <li class="page-item"><a class="page-link">Page {{ page }} of {{ total_pages }}</a></li>
-    {% if page < total_pages %}
-    <li class="page-item">
-      <a class="page-link" href="{{ url_for('index', page=page + 1) }}">Next</a>
-    </li>
-    {% else %}
-    <li class="page-item disabled">
-      <a class="page-link">Next</a>
-    </li>
-    {% endif %}
-  </ul>
-</nav>
-{% endif %}
 
 </div>
 

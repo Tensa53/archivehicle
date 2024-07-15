@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container" style="padding: 5px">
+
+    <br>
+
+    <div>
+        <a href="/insert_vehicle" class="btn btn-primary">Insert a new vehicle</a>
+    </div>
+
+    <br>
+
+<div class="row row-cols-1 row-cols-md-4 g-4">
+
+  {% if vehicles %}
+      {% for vehicle in vehicles %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="{{ vehicle['image'] }}" class="card-img-top" alt="vehicle image" style="padding: 5px">
+          <div class="card-body">
+            <h5 class="card-title">{{ vehicle['name'] }}</h5>
+            <p class="card-text"><b>Model: </b>{{ vehicle['model'] }}</p>
+            <p class="card-text"><b>Type: </b>{{ vehicle['type'] }}</p>
+            <p class="card-text"><b>Year: </b>{{ vehicle['year'] }}</p>
+            <p class="card-text"><b>Price: </b>{{ vehicle['price'] }}$</p>
+            <form method="POST" action="{{ url_for('show_single_vehicle') }}">
+                <input type="hidden" name="vehicle_id" value="{{ vehicle['_id'] }}">
+                <button class="btn btn-primary" type="submit">More info</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+  {% else %}
+    <p>There are no vehicles to display</p>
+  {% endif %}
+
+</div>
+
+{% if page %}
+<nav aria-label="Page navigation example" style="margin-top: 25px">
+  <ul class="pagination justify-content-center">
+    {% if page > 1 %}
+    <li class="page-item">
+      <a class="page-link" href="{{ url_for('index', page=page-1) }}">Prev</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <a class="page-link">Prev</a>
+    </li>
+    {% endif %}
+    <li class="page-item"><a class="page-link">Page {{ page }} of {{ total_pages }}</a></li>
+    {% if page < total_pages %}
+    <li class="page-item">
+      <a class="page-link" href="{{ url_for('index', page=page + 1) }}">Next</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <a class="page-link">Next</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+</div>
+
+{% endblock %}
