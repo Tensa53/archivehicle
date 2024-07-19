@@ -7,6 +7,7 @@
 <table class="table table-bordered table-striped">
   <thead class="table-light"><tr>
     <th></th>
+    <th colspan="1" style="text-align: center"></th>
     <th colspan="6" style="text-align: center">Chassis</th>
     <th colspan="4" style="text-align: center">Cylinders</th>
     <th colspan="5" style="text-align: center">Fuel</th>
@@ -16,12 +17,13 @@
 <tbody>
   <tr style="text-align: center">
     <td><b>Manufacturer</b></td>
+    <td><b>#Vehicles</b></td>
     <td><b>Convertible</b></td>
     <td><b>Hatchback</b></td>
     <td><b>Pickup Truck</b></td>
     <td><b>SUV</b></td>
     <td><b>Sedan</b></td>
-    <td><b>SUV</b></td>
+    <td><b>Van</b></td>
     <td><b>3</b></td>
     <td><b>4</b></td>
     <td><b>6</b></td>
@@ -42,6 +44,7 @@
   {% for manufacturer in manufacturer_stats %}
   <tr style="text-align: center">
     <td><b>{{ manufacturer['name'] }}</b></td>
+    <td>{{ manufacturer['vehicles_per_manufacturer'] }}</td>
     <td>{{ manufacturer['convertible_count'] }}</td>
     <td>{{ manufacturer['hatchback_count'] }}</td>
     <td>{{ manufacturer['pickup_count'] }}</td>
