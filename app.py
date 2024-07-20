@@ -1,5 +1,6 @@
 import math
 
+import pymongo
 from bson import ObjectId
 from flask import Flask, render_template, request, redirect
 from pymongo import MongoClient
@@ -203,7 +204,6 @@ def process_query():
     return query_dict
 
 
-
 def get_mechanical_details(form):
     engine = form['engineInput']
     cylinders = form['cylindersInput']
@@ -245,7 +245,7 @@ def filter_parameters():
     drivetrain = vehicles_col.distinct("mechanical_details.drivetrain", {})
     doors = vehicles_col.distinct("body_details.doors", {})
     chassis = vehicles_col.distinct("chassis", {})
-    manufacturer = manufacturers_col.distinct("manufacturer", {})
+    manufacturer = manufacturers_col.distinct("name", {})
     return chassis, cylinders, doors, drivetrain, fuel, manufacturer, year
 
 
@@ -257,62 +257,6 @@ def process_manufacturer_form():
     description = request.form['descriptionInput']
     new_manufacturer = {"name": name, "country": country, "year": year, "founder": founder, "description": description}
     return new_manufacturer
-
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    chassis, cylinders, doors, drivetrain, fuel, manufacturer, year = filter_parameters()
-    return render_template('index.html', year=year, cylinders=cylinders, fuel=fuel,
-                           drivetrain=drivetrain, doors=doors, chassis=chassis, manufacturer=manufacturer)
-
-
-
-@app.route('/manufacturers', methods=['GET', 'POST'])
-def manufacturers():
-    manufacturers = manufacturers_col.find()
-    return render_template("manufacturers.html", manufacturers=manufacturers)
-
-
-@app.route('/insert_manufacturer', methods=['GET', 'POST'])
-def insert_manufacturer():
-    if request.method == 'POST':
-        new_manufacturer = process_manufacturer_form()
-        manufacturers_col.insert_one(new_manufacturer)
-        return render_template("insert_manufacturer.html",
-                               message_success="Manufacturer inserted successfully")
-
-    return render_template("insert_manufacturer.html")
-
-
-@app.route('/update_manufacturer', methods=['POST'])
-def update_manufacturer():
-    print(request)
-    input = request.form['updateBtn']
-
-    if input == "Update Info":
-        manufacturer_id = request.form['manufacturerId']
-        manufacturer = manufacturers_col.find_one({'_id': ObjectId(manufacturer_id)})
-        return render_template("update_manufacturer.html", manufacturer=manufacturer)
-    elif input == "Save Update":
-        manufacturer_id = request.form['manufacturerId']
-        updated_manufacturer = process_manufacturer_form()
-        manufacturers_col.update_one({"_id": ObjectId(manufacturer_id)}, {"$set": updated_manufacturer}, upsert=False)
-        return render_template("update_manufacturer.html",
-                               message_success="Manufacturer updated successfully")
-
-
-@app.route('/delete_manufacturer', methods=['POST'])
-def delete_manufacturer():
-    manufacturer_id = request.form['manufacturerId']
-    vehicles_by_manufacturer = vehicles_col.find_one({"manufacturer_id": ObjectId(manufacturer_id)})
-    if len(vehicles_by_manufacturer) > 0:
-        return render_template('manufacturers.html',
-                               message_error="You cannot delete this manufacturer. "
-                                             "There are still vehicles of this manufacturer")
-    else:
-        vehicles_col.delete_one({'_id': ObjectId(manufacturer_id)})
-        return render_template('manufacturers.html', message_success="Manufacturer deleted successfully")
-
 
 def get_body_details(form):
     trim = form['trimInput']
@@ -369,6 +313,68 @@ def process_vehicle_form():
     return new_vehicle
 
 
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    chassis, cylinders, doors, drivetrain, fuel, manufacturer, year = filter_parameters()
+    return render_template('index.html', year=year, cylinders=cylinders, fuel=fuel,
+                           drivetrain=drivetrain, doors=doors, chassis=chassis, manufacturers=manufacturer)
+
+
+@app.route('/manufacturers', methods=['GET', 'POST'])
+def manufacturers():
+    manufacturers = list(manufacturers_col.find().sort('name', pymongo.ASCENDING))
+    return render_template("manufacturers.html", manufacturers=manufacturers)
+
+
+@app.route('/insert_manufacturer', methods=['GET', 'POST'])
+def insert_manufacturer():
+    if request.method == 'POST':
+        new_manufacturer = process_manufacturer_form()
+        manufacturers_col.insert_one(new_manufacturer)
+        return render_template("insert_manufacturer.html",
+                               message_success="Manufacturer inserted successfully")
+
+    return render_template("insert_manufacturer.html")
+
+
+@app.route('/update_manufacturer', methods=['POST'])
+def update_manufacturer():
+    print(request)
+    input = request.form['updateBtn']
+    manufacturer_id = request.form['manufacturer_id']
+
+    if input == "Update Info":
+        manufacturer = manufacturers_col.find_one({'_id': ObjectId(manufacturer_id)})
+        return render_template("update_manufacturer.html", manufacturer=manufacturer)
+    elif input == "Save Update":
+        updated_manufacturer = process_manufacturer_form()
+        manufacturers_col.update_one({"_id": ObjectId(manufacturer_id)}, {"$set": updated_manufacturer}, upsert=False)
+        return render_template("update_manufacturer.html",
+                               message_success="Manufacturer updated successfully")
+    elif input == "Delete Info":
+        vehicles_by_manufacturer = vehicles_col.find_one({"manufacturer_id": ObjectId(manufacturer_id)})
+        if vehicles_by_manufacturer:
+            return render_template('manufacturers.html',
+                                   message_error="You cannot delete this manufacturer. "
+                                                 "There are still vehicles of this manufacturer")
+        else:
+            manufacturers_col.delete_one({"_id": ObjectId(manufacturer_id)})
+            return render_template('manufacturers.html', message_success="Manufacturer deleted successfully")
+
+
+@app.route('/delete_manufacturer', methods=['POST'])
+def delete_manufacturer():
+    manufacturer_id = request.form['manufacturerId']
+    vehicles_by_manufacturer = vehicles_col.find_one({"manufacturer_id": ObjectId(manufacturer_id)})
+    if vehicles_by_manufacturer:
+        return render_template('manufacturers.html',
+                               message_error="You cannot delete this manufacturer. "
+                                             "There are still vehicles of this manufacturer")
+    else:
+        manufacturers_col.delete_one({"_id": ObjectId(manufacturer_id)})
+        return render_template('manufacturers.html', message_success="Manufacturer deleted successfully")
+
+
 @app.route('/vehicles', methods=['GET', 'POST'])
 def vehicles():
     page = request.args.get('page', default=1, type=int)
@@ -408,7 +414,7 @@ def search_a_vehicle():
 
     query = process_query()
 
-    if len(query['$and']) == 1:
+    if len(query['$and']) == 0:
         return redirect("/")
 
     vehicles_found = list(vehicles_col.find(query))
@@ -449,11 +455,11 @@ def delete_vehicle():
 
 @app.route("/stats", methods=['GET', 'POST'])
 def stats():
-    manufacturers_id = manufacturers_col.distinct("_id", {})
+    manufacturers_id = list(manufacturers_col.find({}, {"_id": 1}).sort('name', pymongo.ASCENDING))
     manufacturer_stats = {}
 
     for manufacturer in manufacturers_id:
-        manufacturer_stats[manufacturer] = get_manufacturer_stats(manufacturer)
+        manufacturer_stats[manufacturer['_id']] = get_manufacturer_stats(manufacturer['_id'])
 
     manufacturer_stats_list = list(manufacturer_stats.values())
 

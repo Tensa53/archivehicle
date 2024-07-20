@@ -66,39 +66,41 @@
           {% for manufacturer in manufacturers %}
             <tr>
               <th scope="row">
-                  <form id="{{ loop.index }}" method="POST" action="{{ url_for('update_manufacturer') }}">
+                  <form id="{{ loop.index }}" method="POST">
                       <input type="hidden" name="manufacturerId" id="manufacturerId" value="{{ manufacturer['_id'] }}"/>
                   </form>
                   {{ manufacturer['name'] }}</th>
                 <td>{{ manufacturer['country'] }}</td>
                 <td>{{ manufacturer['year'] }}</td>
                 <td>{{ manufacturer['founder'] }}</td>
-                <td>{{ manufacturer['description'] }}"</td>
-                <td><input form="{{ loop.index }}" type="submit" class="btn btn-primary" name="updateBtn" id="updateBtn" value="Update Info"/></td>
-                <td><input form="{{ loop.index }}" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" value="Delete info"/></td>
+                <td>{{ manufacturer['description'] }}</td>
+                <td><input form="{{ loop.index }}" type="submit" formaction="{{ url_for('update_manufacturer') }}"
+                           class="btn btn-primary" name="updateBtn" id="updateBtn" value="Update Info"/></td>
+                <td><input form="{{ loop.index }}" type="submit" formaction="{{ url_for('delete_manufacturer') }}"
+                           class="btn btn-danger" name="deleteBtn" id="deleteBtn" value="Delete info"/></td>
             </tr>
 
               <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Manufacturer Info</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            Are you sure you want to delete this manufacturer's info?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <form method="POST">
-                <input type="hidden" id="manufacturerId" name="manufacturerId" value="{{ manufacturer['_id'] }}">
-                <input type="submit" class="btn btn-primary" formaction="{{ url_for('delete_manufacturer') }}" value="Confirm"/>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+{#    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">#}
+{#      <div class="modal-dialog modal-dialog-centered">#}
+{#        <div class="modal-content">#}
+{#          <div class="modal-header">#}
+{#            <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Manufacturer Info</h1>#}
+{#            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
+{#          </div>#}
+{#          <div class="modal-body">#}
+{#            Are you sure you want to delete this manufacturer's info?#}
+{#          </div>#}
+{#          <div class="modal-footer">#}
+{#            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>#}
+{#            <form id="{{ loop.index + 1 }}" method="POST" action="{{ url_for("delete_manufacturer") }}">#}
+{#                <input type="hidden" form="DeleteForm{{ loop.index }}" id="manufacturerId" name="manufacturerId" value="{{ manufacturer['_id'] }}">#}
+{#                <input type="submit" class="btn btn-primary" value="Confirm"/>#}
+{#            </form>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
 
           {% endfor %}
           </tbody>
