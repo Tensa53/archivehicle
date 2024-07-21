@@ -26,6 +26,11 @@
         {% else %}
         <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
         {% endif %}
+
+          {% if filters %}
+          <p> &nbsp&nbsp&nbsp&nbsp {{ filters }}</p>
+          {% endif %}
+
           <div class="accordion-body">
                 <label for="yearFilter">Year:</label>
                 <select name="yearFilter" id="yearFilter" class="form-select">

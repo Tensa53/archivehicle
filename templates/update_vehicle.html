@@ -63,7 +63,7 @@
     <label for="manufacturerInput" class="form-label">Manufacturer <span style="color: red">*</span> </label>
       <select id="manufacturerInput" name="manufacturerInput" class="form-select" required>
         {% for manufacturer in manufacturers %}
-            {% if manufacturer == vehicle['manufacturer'] %}
+            {% if manufacturer['_id'] == vehicle['manufacturer_id'] %}
                 <option value="{{ manufacturer['_id'] }}" selected>{{ manufacturer['name'] }}</option>
             {% else %}
                 <option value="{{ manufacturer['_id'] }}">{{ manufacturer['name'] }}</option>
@@ -118,11 +118,6 @@
                     <label for="mileageInput" class="form-label">Mileage</label>
                     <input type="number" class="form-control" id="mileageInput" name="mileageInput"
                     value="{{ vehicle['mechanical_details']['mileage'] }}">
-                </div>
-                <div class="mb-3">
-                    <label for="mileageInput" class="form-label">Transmission</label>
-                    <input type="text" class="form-control" id="transmissionInput" name="transmissionInput"
-                    value="{{ vehicle['mechanical_details']['transmission'] }}">
                 </div>
                 <div class="mb-3">
                     <label for="drivetrainInput" class="form-label">Drivetrain</label>
@@ -219,12 +214,12 @@
             <div class="mb-3">
                 <label for="excolorInput" class="form-label">Exterior Color</label>
                 <input type="text" class="form-control" id="excolorInput" name="excolorInput"
-                value="{{ vehicle['body_details']['exterior_color'] }}">
+                value="{{ vehicle['body_details']['exterior'] }}">
             </div>
             <div class="mb-3">
                 <label for="incolorInput" class="form-label">Interior Color</label>
                 <input type="text" class="form-control" id="incolorInput" name="incolorInput"
-                value="{{ vehicle['body_details']['interior_color'] }}">
+                value="{{ vehicle['body_details']['interior'] }}">
             </div>
             </div>
         </div>
