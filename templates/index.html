@@ -13,12 +13,18 @@
     <input type="submit" class="btn btn-primary" formaction="{{ url_for('search_a_vehicle') }}" value="Search">
     <br>
     <br>
+
+    {% if filters %}
+    {#<p> &nbsp&nbsp&nbsp&nbsp {{ filters }}</p>#}
+    <p>Search Results by: {{ filters }}</p>
+    {% endif %}
+
     <div class="accordion" id="accordionExample">
       <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                   data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-            Filter Search By:
+            Filter:
           </button>
         </h2>
         {% if vehicles %}
@@ -26,10 +32,6 @@
         {% else %}
         <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
         {% endif %}
-
-          {% if filters %}
-          <p> &nbsp&nbsp&nbsp&nbsp {{ filters }}</p>
-          {% endif %}
 
           <div class="accordion-body">
                 <label for="yearFilter">Year:</label>
