@@ -14,7 +14,7 @@ base di varie caratteristiche per veicolo.
 
 # Installazione di ArchiVehicle
 Per installare e utilizzare ArchiVehicle è sufficiente seguire questi passaggi:
-1. Importare tramite Compass le due collezioni di documenti:
+1. Importare tramite MongoDB Compass le due collezioni di documenti:
     >archiVehicle.manufacturer.json <br>
      archiVehicle.vehicle.json
 2. Posizionarsi nella cartella root del progetto;
