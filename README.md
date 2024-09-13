@@ -1,27 +1,24 @@
 # ArchiVehicle
 
-ArchiVehicle è un progetto realizzato per il corso di Basi di Dati 2. L’obiettivo è quello di semplificare e digitalizzare la gestione relative alle
-informazioni del parco veicoli di un concessionario. Questo software è destinato all’utenza
-di un’attività commerciale che si occuperà di recuperare le informazioni dei veicoli e di
-memorizzarle nel sistema, attraverso un’interfaccia grafica fornita da un applicazione web
-client/server. ArchiVehicle supporta le seguenti funzionalità:
-1. Inserimento, modifica, cancellazione delle informazioni di un veicolo;
-2. Inserimento, modifica, cancellazione delle informazioni di un produttore di
-veicoli;
-3. Ricerca di un veicolo mediante l’applicazione di alcuni filtri;
-4. Visualizzazione rapida del numero di veicoli da parte di ogni produttore, sulla
-base di varie caratteristiche per veicolo.
+ArchiVehicle is a project realized for the Database II class. The goal of this project is to digitalize and simplify
+the information management about a vehicle park, through a graphical user interface served by a client/server 
+web application. ArchiVehicle offers the following functionalities:
+1. Insert, update, delete the information about a vehicle;
+2. Insert, update, delete the information about a manufacturer of vehicles;
+3. Searching for a vehicle by applying some filters;
+4. Quick view of the number of vehicles by each manufacturer, based on various characteristics by vehicle.
 
-# Installazione di ArchiVehicle
-Per installare e utilizzare ArchiVehicle è sufficiente seguire questi passaggi:
-1. Importare tramite MongoDB Compass le due collezioni di documenti:
-    >archiVehicle.manufacturer.json <br>
+## Install ArchiVehicle
+
+In order to install and use ArchiVehicle you need to follow the steps:
+1. Import through MongoDB Compass these collections of documents:
+   > archiVehicle.manufacturer.json <br>
      archiVehicle.vehicle.json
-2. Posizionarsi nella cartella root del progetto;
-3. Creare un virtual environment con il seguente comando:
-    > python -m venv .venv
-4. Attivare il virtual environment
-5. Installare le dipendenze necessarie con il seguente comando:
-    > pip install flask pymongo
-6. Lanciare l’esecuzione del server flask con il seguente comando:
-    > flask run
+2. Change the current directory to the root of the project;
+3. Create a virtual environment with the command:
+   > python -m venv .venv
+4. Activate the virtual environment;
+5. Install the needed dependencies with the command:
+   > pip install flask pymongo
+6. Execute the flask server with the command:
+   > flask run
